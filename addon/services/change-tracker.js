@@ -8,7 +8,7 @@ function abstractMethod(name) {
 }
 
 export default Ember.Service.extend({
-  
+
   detectProperties:   abstractMethod("detectProperties"),
   reincarnateRecord:  abstractMethod("reincarnateRecord"),
   deleteRecord:       abstractMethod("deleteRecord")
@@ -133,6 +133,7 @@ export default Ember.Service.extend({
     }
 
     function fixSnapshot(snapshot) {
+      snapshot[0] = replaceDead(snapshot[0]);
       var key;
       for (key in snapshot[2]) {
         snapshot[2][key] = replaceDead(snapshot[2][key]);
@@ -144,6 +145,8 @@ export default Ember.Service.extend({
 
     this.get("undoStack").map(fixSnapshot);
     this.get("redoStack").map(fixSnapshot);
+
+    this.get("snapshots")
 
     return alive;
   },
