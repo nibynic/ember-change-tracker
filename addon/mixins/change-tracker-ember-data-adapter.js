@@ -21,6 +21,6 @@ export default Ember.Mixin.create({
   },
 
   reincarnateRecord(dead) {
-    return this.get("store").createRecord(dead.constructor.recordName);
+    return this.get("store").createRecord(dead.constructor.modelName);
   }
 });
