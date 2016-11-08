@@ -132,21 +132,21 @@ export default Ember.Service.extend({
       return record === dead ? alive : record;
     }
 
-    function fixSnapshot(snapshot) {
-      snapshot[0] = replaceDead(snapshot[0]);
-      var key;
-      for (key in snapshot[2]) {
-        snapshot[2][key] = replaceDead(snapshot[2][key]);
-      }
-      for (key in snapshot[3]) {
-        snapshot[3][key] = replaceDead(snapshot[3][key]);
-      }
+    function fixSnapshot(snapshots) {
+      snapshots.forEach((snapshot) => {
+        snapshot[0] = replaceDead(snapshot[0]);
+        var key;
+        for (key in snapshot[2]) {
+          snapshot[2][key] = replaceDead(snapshot[2][key]);
+        }
+        for (key in snapshot[3]) {
+          snapshot[3][key] = replaceDead(snapshot[3][key]);
+        }
+      });
     }
 
     this.get("undoStack").map(fixSnapshot);
     this.get("redoStack").map(fixSnapshot);
-
-    this.get("snapshots")
 
     return alive;
   },

@@ -170,6 +170,24 @@ test('it udoes & redoes changes', function(assert) {
   assert.equal(lastCalledMethod, "delete", "after redo record should be deleted");
 });
 
+test('it reincarnates records', function(assert) {
+  let service = this.subject();
+  let record = Ember.Object.create({ id: 1, firstName: "Ann" });
+  let reincarnation = Ember.Object.create({ id: 2 });
+  service.reincarnateRecord = function() {
+    return reincarnation;
+  };
+
+  service.begin(record, "firstName");
+  record.set("firstName", "Mary");
+  service.commit(record);
+  service.didDelete(record, "firstName");
+  service.commit(record);
+  service.undo();
+
+  assert.equal(service.get("undoStack")[0][0][0].get("id"), reincarnation.get("id"), "should replace all record references with its reincarnation");
+});
+
 test('it changes state', function(assert) {
   let service = this.subject();
   let record = Ember.Object.create({ firstName: "Ann" });
