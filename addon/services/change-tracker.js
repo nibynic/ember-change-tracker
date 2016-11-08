@@ -3,14 +3,17 @@ import EmberDataAdapter from "ember-change-tracker/mixins/change-tracker-ember-d
 
 function abstractMethod(name) {
   return function() {
-    Ember.assert(false, `ChangeTracker service must implement ${name} method`);
+    Ember.assert(`ChangeTracker service must implement ${name} method`, false);
   };
 }
 
-export default Ember.Service.extend(Ember.Evented, EmberDataAdapter, {
+export default Ember.Service.extend({
+  
   detectProperties:   abstractMethod("detectProperties"),
   reincarnateRecord:  abstractMethod("reincarnateRecord"),
-  deleteRecord:       abstractMethod("deleteRecord"),
+  deleteRecord:       abstractMethod("deleteRecord")
+
+}, Ember.Evented, EmberDataAdapter, {
 
   begin(record, ...properties) {
     if (properties.length === 0) {
