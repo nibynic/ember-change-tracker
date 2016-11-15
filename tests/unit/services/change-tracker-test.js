@@ -172,20 +172,46 @@ test('it udoes & redoes changes', function(assert) {
 
 test('it reincarnates records', function(assert) {
   let service = this.subject();
-  let record = Ember.Object.create({ id: 1, firstName: "Ann" });
-  let reincarnation = Ember.Object.create({ id: 2 });
+  let record1, record2, reincarnation;
+
+  Ember.run(function() {
+    function mockAssociation(content) {
+      return Ember.ObjectProxy.extend(Ember.PromiseProxyMixin).create({
+        promise: Ember.RSVP.resolve(content)
+      });
+    }
+    record1 = Ember.Object.create({ id: 1, firstName: "Ann", lastName: undefined });
+    record2 = Ember.Object.create({
+      id: 2,
+      syncPresent: record1,
+      syncMissing: undefined,
+      asyncPresent: mockAssociation(record1),
+      asyncMissing: mockAssociation(undefined)
+    });
+    reincarnation = Ember.Object.create({ id: 3 });
+  });
+
   service.reincarnateRecord = function() {
     return reincarnation;
   };
+  service.detectProperties = function(record) {
+    return Object.keys(record);
+  };
 
-  service.begin(record, "firstName");
-  record.set("firstName", "Mary");
-  service.commit(record);
-  service.didDelete(record, "firstName");
-  service.commit(record);
+  service.didCreate(record1);
+  service.didCreate(record2);
+  service.commit(record1, record2);
+
+  service.didDelete(record1);
+  service.commit(record1);
+
   service.undo();
 
-  assert.equal(service.get("undoStack")[0][0][0].get("id"), reincarnation.get("id"), "should replace all record references with its reincarnation");
+  assert.equal(service.get("undoStack")[0][0][0].get("id"), reincarnation.get("id"), "should replace snapshot record reference with its reincarnation");
+  assert.equal(service.get("undoStack")[0][1][2].syncPresent, reincarnation, "should replace old synchronous association with its reincarnation");
+  assert.equal(service.get("undoStack")[0][1][2].asyncPresent, reincarnation, "should replace old asynchronous association with its reincarnation");
+  assert.equal(service.get("undoStack")[0][1][3].syncPresent, reincarnation, "should replace new synchronous association with its reincarnation");
+  assert.equal(service.get("undoStack")[0][1][3].asyncPresent, reincarnation, "should replace new asynchronous association with its reincarnation");
 });
 
 test('it changes state', function(assert) {
