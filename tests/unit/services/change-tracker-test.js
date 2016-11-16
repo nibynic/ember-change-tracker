@@ -183,6 +183,8 @@ test('it reincarnates records', function(assert) {
     record1 = Ember.Object.create({ id: 1, firstName: "Ann", lastName: undefined });
     record2 = Ember.Object.create({
       id: 2,
+      param1: 0,
+      param2: 120,
       syncPresent: record1,
       syncMissing: undefined,
       asyncPresent: mockAssociation(record1),
@@ -207,11 +209,25 @@ test('it reincarnates records', function(assert) {
 
   service.undo();
 
-  assert.equal(service.get("undoStack")[0][0][0].get("id"), reincarnation.get("id"), "should replace snapshot record reference with its reincarnation");
-  assert.equal(service.get("undoStack")[0][1][2].syncPresent, reincarnation, "should replace old synchronous association with its reincarnation");
-  assert.equal(service.get("undoStack")[0][1][2].asyncPresent, reincarnation, "should replace old asynchronous association with its reincarnation");
-  assert.equal(service.get("undoStack")[0][1][3].syncPresent, reincarnation, "should replace new synchronous association with its reincarnation");
-  assert.equal(service.get("undoStack")[0][1][3].asyncPresent, reincarnation, "should replace new asynchronous association with its reincarnation");
+  assert.equal(service.get("undoStack")[0][0][0], reincarnation, "should replace snapshot record reference with its reincarnation");
+  assert.propEqual(service.get("undoStack")[0][1][2], {
+    id: 2,
+    param1: 0,
+    param2: 120,
+    syncPresent: reincarnation,
+    syncMissing: undefined,
+    asyncPresent: reincarnation,
+    asyncMissing: null
+  }, "should replace old record references with its reincarnation");
+  assert.propEqual(service.get("undoStack")[0][1][3], {
+    id: 2,
+    param1: 0,
+    param2: 120,
+    syncPresent: reincarnation,
+    syncMissing: undefined,
+    asyncPresent: reincarnation,
+    asyncMissing: null
+  }, "should replace new record references with its reincarnation");
 });
 
 test('it changes state', function(assert) {
