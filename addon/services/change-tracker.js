@@ -128,10 +128,11 @@ export default Ember.Service.extend({
     let alive = this.reincarnateRecord(dead);
 
     function replaceDead(record) {
-      if (record !== undefined) {
+      if (record) {
         record = record.hasOwnProperty("isFulfilled") ? record.get("content") : record;
         return record === dead ? alive : record;
       }
+      return record;
     }
 
     function fixSnapshot(snapshots) {
