@@ -72,6 +72,12 @@ export default Ember.Service.extend({
     this.notifyPropertyChange("hasUncommitedRecords");
   },
 
+  reset() {
+    this.get("snapshots").clear();
+    this.get("undoStack").clear();
+    this.get("redoStack").clear();
+  },
+
   undo() {
     let snapshot = this.get("undoStack").popObject();
     for(var i = snapshot.length - 1; i >= 0; i--) {

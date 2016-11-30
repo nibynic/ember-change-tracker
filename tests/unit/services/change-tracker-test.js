@@ -168,6 +168,11 @@ test('it udoes & redoes changes', function(assert) {
   assert.equal(lastCalledMethod, "reincarnate", "after undo record should be reincarnated");
   service.redo();
   assert.equal(lastCalledMethod, "delete", "after redo record should be deleted");
+
+  service.reset();
+  assert.equal(service.get("snapshots.size"), 0, "after reset snapshots map should be empty");
+  assert.equal(service.get("undoStack.length"), 0, "after reset undo stack should be empty");
+  assert.equal(service.get("redoStack.length"), 0, "after reset redo stack should be empty");
 });
 
 test('it reincarnates records', function(assert) {
