@@ -172,6 +172,17 @@ export default Ember.Service.extend({
   },
 
 
+  checkForChangedRecords() {
+    let changed = false;
+    this.get("snapshots").forEach((snapshot, record) => {
+      if (!changed && this.detectChanges(record)) {
+        changed = true;
+      }
+    });
+    return changed;
+  },
+
+
   undoAvailable: Ember.computed("undoStack.length", function() {
     return this.get("undoStack.length") > 0;
   }),

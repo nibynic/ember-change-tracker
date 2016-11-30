@@ -239,10 +239,13 @@ test('it changes state', function(assert) {
 
   service.begin(record, "firstName");
   assert.equal(service.get("hasUncommitedRecords"), true, "should declare uncommited records");
+  assert.equal(service.checkForChangedRecords(), false, "should not declare changed records");
   assert.equal(service.get("undoAvailable"), false, "undo should not be available");
   assert.equal(service.get("redoAvailable"), false, "redo should not be available");
 
   record.set("firstName", "Jack");
+  assert.equal(service.checkForChangedRecords(), true, "should declare changed records");
+
   service.commit(record);
   assert.equal(service.get("hasUncommitedRecords"), false, "should not declare uncommited records");
   assert.equal(service.get("undoAvailable"), true, "after commit undo should be available");
