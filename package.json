@@ -1,7 +1,7 @@
 {
   "name": "ember-change-tracker",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Undo/redo and change detection for Ember.js",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -15,7 +15,7 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "",
+  "author": "Paweł Bator",
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.2",
@@ -41,7 +41,9 @@
     "loader.js": "^4.0.1"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "undo",
+    "redo"
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.6"
