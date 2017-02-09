@@ -20,7 +20,7 @@ export default Ember.Service.extend({
       properties = this.detectProperties(record);
     }
     let oldSnapshot = this.get("snapshots").get(record) || {};
-    let snapshot = Ember.assign(oldSnapshot, record.getProperties(properties));
+    let snapshot = Ember.assign(record.getProperties(properties), oldSnapshot);
     this.get("snapshots").set(record, snapshot);
     this.get("actions").set(record, "change");
     this.notifyPropertyChange("hasUncommitedRecords");

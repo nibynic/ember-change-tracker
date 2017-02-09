@@ -19,15 +19,10 @@ test('it stores record snapshot', function(assert) {
     lastName: "Smith",
     age: 73
   });
-  let record2 = Ember.Object.create({
-    firstName: "Amanda",
-    lastName: "Jackson",
-    age: 22
-  });
   let didCallDetect = false;
   service.detectProperties = function(record) {
-    didCallDetect = record === record2;
-    return [];
+    didCallDetect = record === record1;
+    return ["firstName", "lastName", "age"];
   };
 
   service.begin(record1, "firstName", "age");
@@ -48,8 +43,20 @@ test('it stores record snapshot', function(assert) {
     "should extend existing snapshot"
   );
 
-  service.begin(record2);
+  record1.setProperties({
+    firstName: "Alex",
+    lastName: "Jackson",
+    age: 34
+  });
+
+  service.begin(record1);
+
   assert.deepEqual(didCallDetect, true, "should detect record properties");
+  assert.deepEqual(
+    service.get("snapshots").get(record1),
+    {firstName: "John", age: 73, lastName: "Smith"},
+    "should keep previously stored snapshot"
+  );
 });
 
 test('it stores record action', function(assert) {
