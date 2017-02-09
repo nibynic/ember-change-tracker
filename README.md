@@ -12,7 +12,7 @@ ember install ember-change-tracker
 
 ### Basic flow
 
-Inject `change-tracker` service in your route / controller / component:
+Inject `change-tracker` service in your route/controller/component:
 
 ```
 changeTracker: Ember.inject.service()
@@ -20,7 +20,7 @@ changeTracker: Ember.inject.service()
 
 #### Start tracking
 
-Before you allow user to make changes in data, tell Ember Change Tracker to observe affected records. At this stage Ember Change Tracker will create a spanshot of your data and store for comparing in the future.
+Before you allow user to make changes in data, tell Ember Change Tracker to observe affected records. At this stage Ember Change Tracker will create a snapshot of your data and store for comparing in the future.
 
 ```
 this.get("changeTracker").begin(this.get("model"), "firstName", "lastName");
